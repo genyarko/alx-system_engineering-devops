@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Print the column headers
+echo "Username    UID    Home Directory"
+
+# Loop through each line of the /etc/passwd file
+while IFS=: read -r username x uid gid gecos homedir shell; do
+    # Print the desired fields for each user
+    echo "$username    $uid    $homedir"
+done < /etc/passwd
