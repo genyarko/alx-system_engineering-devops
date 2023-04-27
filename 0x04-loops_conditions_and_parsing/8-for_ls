@@ -3,11 +3,7 @@
 # in a list format, where only the part of the name after
 # the first dash is displayed
 
-for file in *
-do
-  if [ "${file:0:1}" != "." ] && [ -f "$file" ]
-  then
-    file_name="$(echo "$file" | cut -d'-' -f2-)"
-    printf "%s\n" "$file_name"
-  fi
+for f in *; do
+    echo "$f" | cut -d '-' -f 2
+
 done
