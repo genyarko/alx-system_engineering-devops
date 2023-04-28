@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# displays To infinity and beyond indefinitely
-# With a sleep 2 in between each iteration
-# I am invincible!!! when receiving a SIGTERM signal
+# This script displays "To infinity and beyond indefinitely" and sleeps for 2 seconds between iterations.
+# It displays "I am invincible!!!" when receiving a SIGTERM signal.
+# This version stops the 7-highlander process instead of the 4-to_infinity_and_beyond one.
 
 while true
 do 
