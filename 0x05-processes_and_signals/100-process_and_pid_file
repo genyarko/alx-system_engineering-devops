@@ -1,23 +1,16 @@
 #!/usr/bin/env bash
-# This script creates a PID file and displays messages for various signals.
+# create PID file
+echo $$ > /var/run/myscript.pid
 
+# trap signals
+trap 'echo "I hate the kill command"; exit 1' SIGTERM
+trap 'echo "Y U no love me?!"; exit 1' SIGINT
+trap 'rm /var/run/myscript.pid; exit 0' SIGQUIT SIGTERM
 
-terminator() {
-  rm /var/run/myscript.pid
-  exit
-}
-
-# Trap signals and display messages
-trap 'echo "Y U no love me?!" && terminator' SIGINT
-trap 'echo "I hate the kill command" && terminator' SIGTERM
-trap 'terminator' SIGQUIT
-
-# Create the PID file
-echo "$$" > /var/run/myscript.pid
-
-# Display messages indefinitely
+# infinite loop
 while true
 do
   echo "To infinity and beyond"
   sleep 2
 done
+
