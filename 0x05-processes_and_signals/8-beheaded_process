@@ -2,12 +2,7 @@
 # This script kills the process 7-highlander.
 
 # Use the ps command to find the PID of the process.
-pid=$(ps -ef | grep "7-highlander" | grep -v grep | awk '{print $2}')
-
 # Check if the process is still running and terminate it if it is.
-if [ -n "$pid" ]; then
-    echo "Killing process $pid"
-    kill $pid
-else
-    echo "7-highlander process not found"
-fi
+
+pkill -f -SIGKILL 7-highlander
+
