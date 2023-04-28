@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+# This Bash init script manages the manage_my_process script.
+
+# Set the path to the manage_my_process script
+MY_PROCESS_SCRIPT=/path/to/manage_my_process
+
+# Check if the script is executable
+if ! [ -x "$MY_PROCESS_SCRIPT" ]; then
+  echo "Error: $MY_PROCESS_SCRIPT is not executable."
+  exit 1
+fi
+
+# Check for the correct number of arguments
+if [ $# -ne 1 ]; then
+  echo "Usage: $0 {start|stop|restart}"
+  exit 1
+fi
+
+# Check which argument was passed
+case "$1" in
+  start)
+    # Start manage_my_process
+    $MY_PROCESS_SCRIPT &
+    echo $! > /var/run/my_process.pid
+    echo "manage_my_process started."
+    ;;
+  stop)
+    # Stop manage_my_process
+    kill $(cat /var/run/my_process.pid)
+    rm /var/run/my_process.pid
+    echo "manage_my_process stopped."
+    ;;
+  restart)
+    # Restart manage_my_process
+    $0 stop
+    sleep 1
+    $0 start
+    echo "manage_my_process restarted."
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1
+    ;;
+esac
+
+exit 0
