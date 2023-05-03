@@ -1,2 +1,8 @@
 #!/usr/bin/env ruby
-puts ARGV[0].scan(/School/).join
+
+input_string = ARGV[0]
+if input_string.match(/School/)
+  puts "Match found!"
+else
+  puts "No match found."
+end
