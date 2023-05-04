@@ -1,6 +1,17 @@
 #!/usr/bin/env bash
-# a Bash script that displays listening ports:
-#+ That only shows listening sockets
-#+ That shows the PID and name of the program to which each socket belongs
+#  a Bash script that displays listening ports.
 
-sudo netstat -lp
+echo "Listening ports:"
+
+# Display only listening sockets
+netstat -tln | awk '$6 == "LISTEN" { print $4 }' | 
+# Loop through each listening port and display the program name and PID
+while read -r line
+do
+  # Get the process ID of the program using the port
+  pid=$(lsof -t -i "$line")
+  # Get the name of the program using the process ID
+  pname=$(ps -p "$pid" -o comm=)
+  echo "$line - $pname (PID: $pid)"
+done
+
