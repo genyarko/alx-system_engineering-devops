@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
-# Change localhost to 127.0.0.2
-# Change facebook.com to 8.8.8.8
+# This script configures localhost and facebook.com DNS resolution.
 
-cp /etc/hosts ~/hosts.new
-sed -i 's/127.*$/127.0.0.2 localhost\n8.8.8.8 facebook.com/' ~/hosts.new
-cp -f ~/hosts.new /etc/hosts
+# Update /etc/hosts file to map localhost to 127.0.0.2
+sed -i 's/^127.0.0.1 localhost/127.0.0.2 localhost/' /etc/hosts
+
+# Update /etc/resolv.conf file to use 8.8.8.8 as the DNS resolver for facebook.com
+echo "nameserver 8.8.8.8" | sudo tee -a /etc/resolv.conf
+echo "server=8.8.8.8" | sudo tee -a /etc/dnsmasq.conf
+echo "address=/facebook.com/8.8.8.8" | sudo tee -a /etc/dnsmasq.conf
+
+# Restart the networking service to apply the changes
+sudo systemctl restart networking.service
