@@ -1,4 +1,15 @@
 #!/usr/bin/env bash
-# displays all active IPv4 IPs on the machine it is executed on
+# This script displays all active IPv4 IPs on the machine.
 
-ifconfig | grep -Eo "inet (addr:)?([0-9]*\.){3}[0-9]*" | cut -b 11-
+# Get the list of network interfaces
+interfaces=$(ip addr | grep '^[0-9]' | awk '{print $2}' | sed 's/://' | grep -v 'lo')
+
+# Loop through each network interface and display its IPv4 address
+for iface in $interfaces
+do
+  # Get the IPv4 address of the network interface
+  ip=$(ip addr show $iface | grep 'inet ' | awk '{print $2}' | cut -d'/' -f1)
+  if [ ! -z "$ip" ]; then
+    echo "Interface $iface: $ip"
+  fi
+done
