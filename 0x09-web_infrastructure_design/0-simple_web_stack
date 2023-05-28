@@ -1,0 +1,79 @@
+                +-------------------+
+                |                   |
+       +------->|    User's        |
+       |        |    Computer      |
+       |        |                   |
+       |        +-------------------+
+       |
+       |
+       |        +-------------------+
+       |        |                   |
+       +--------|   DNS Server      |
+       |        |                   |
+       |        +-------------------+
+       |
+       |
+       |        +-------------------+
+       |        |                   |
+       +------->|    Web Server     |
+       |        |   (Nginx)         |
+       +------->|                   |
+       |        +-------------------+
+       |
+       |
+       |        +-------------------+
+       |        |                   |
+       +------->|  Application      |
+       |        |    Server         |
+       +------->|                   |
+       |        +-------------------+
+       |
+       |
+       |        +-------------------+
+       |        |                   |
+       +------->|    Database       |
+                |   (MySQL)         |
+                |                   |
+                +-------------------+
+
+A one-server web infrastructure to host the website reachable via www.foobar.com.
+
+1. User wanting to access the website:
+When a user wants to access the website, they will enter the URL "www.foobar.com" in their web browser.
+
+2. Server:
+A server is a physical or virtual computer that hosts the website and serves requests from users. In this case, we have one server that will handle all the components of our web infrastructure.
+
+3. Domain name and the role of a domain name:
+The domain name, in this case, is "foobar.com". It acts as a human-readable address for the website. When a user enters "www.foobar.com" in their browser, the domain name system (DNS) translates it to the server's IP address (8.8.8.8 in this case).
+
+4. DNS record for www:
+The "www" in "www.foobar.com" is a subdomain, and it is typically used to indicate the web server for a website. In the DNS configuration, the www record is an alias (CNAME) that points to the server's IP address (8.8.8.8).
+
+5. Web server and its role:
+The web server, in this case, Nginx, handles HTTP requests and serves static files to the users. It receives the request from the user's browser, retrieves the corresponding web page or resource, and sends it back to the user's computer over the network.
+
+6. Application server and its role:
+The application server runs the website's application logic and processes dynamic content. It generates the web pages on-the-fly based on user requests and interacts with the web server and database. In this infrastructure, the application server will interpret and execute the website's code base.
+
+7. Application files (code base):
+The application files contain the code that defines the functionality and behavior of the website. They are stored on the server and are executed by the application server.
+
+8. Database and its role:
+The database, in this case, MySQL, stores and manages the website's data. It provides a structured way to store, retrieve, and manipulate data required by the website. The application server communicates with the database to fetch or store data as needed.
+
+9. Server communication with the user's computer:
+The server communicates with the user's computer over the internet using the HTTP (Hypertext Transfer Protocol) protocol. When a user requests a web page, the server responds with the appropriate HTTP response containing the requested content.
+
+Issues with this infrastructure:
+
+a. Single Point of Failure (SPOF):
+Since we have only one server, any failure or issue with that server could cause the entire website to become inaccessible. If the server goes down, the website will be unavailable until the issue is resolved.
+
+b. Downtime during maintenance:
+During maintenance activities, such as deploying new code or updating server configurations, the web server may need to be restarted. This can result in downtime, causing the website to be temporarily unavailable to users.
+
+c. Limited scalability:
+With a single server, the infrastructure has limited capacity to handle a high volume of incoming traffic. If the website experiences a sudden surge in traffic, the server may become overloaded, leading to performance issues or even a complete breakdown.
+
+To address these issues, a more robust infrastructure design would involve multiple servers, load balancers, and scalable architecture that allows for redundancy and distribution of traffic across multiple server instances.
