@@ -1,0 +1,95 @@
+                      +-------------------+
+                      |                   |
+             +------->|    User's        |
+             |        |    Computer      |
+             |        |                   |
+             |        +-------------------+
+             |
+             |
+             |        +-------------------+
+             |        |                   |
+             +--------|   DNS Server      |
+             |        |                   |
+             |        +-------------------+
+             |
+             |
+             |        +-------------------+
+             |        |                   |
+             +------->|   Firewall 1      |
+             |        |                   |
+             |        +-------------------+
+             |
+             |
+             |        +-------------------+
+             |        |                   |
+             +------->|   Firewall 2      |
+             |        |                   |
+             |        +-------------------+
+             |
+             |
+             |        +-------------------+
+             |        |                   |
+             +------->|   Firewall 3      |
+             |        |                   |
+             |        +-------------------+
+             |
+             |
+             |        +-------------------+
+             |        |                   |
+             +------->|    Load Balancer  |
+             |        |    (SSL Termination)|
+             +------->|                   |
+             |        +-------------------+
+             |
+             |
+             |        +-------------------+
+             |        |                   |
+             +------->|   Web Server 1    |
+             |        |   (Nginx)         |
+             +------->|                   |
+             |        +-------------------+
+             |
+             |
+             |        +-------------------+
+             |        |                   |
+             +------->|   Web Server 2    |
+             |        |   (Nginx)         |
+             +------->|                   |
+             |        +-------------------+
+             |
+             |
+             |        +-------------------+
+             |        |                   |
+             +------->|  Application      |
+             |        |   Server 1        |
+             +------->|                   |
+             |        +-------------------+
+             |
+             |
+             |        +-------------------+
+             |        |                   |
+             +------->|  Application      |
+             |        |   Server 2        |
+             +------->|                   |
+             |        +-------------------+
+             |
+             |
+             |        +-------------------+
+             |        |                   |
+             +------->|    Database       |
+             |        |   (MySQL)         |
+             +------->|                   |
+                      +-------------------+
+
+In this diagram:
+
+The user's computer represents the device from which a user accesses the website.
+The DNS server translates the domain name "www.foobar.com" to the server's IP address.
+Three firewalls are added for improved network security. They help filter and control incoming and outgoing traffic, protecting the infrastructure from unauthorized access or malicious activity.
+The load balancer performs SSL termination, decrypting HTTPS traffic and forwarding it to the web servers.
+Web Server 1 and Web Server 2 handle incoming HTTP requests, serving static files and acting as reverse proxies.
+Application Server 1 and Application Server 2 execute the website's code base, generating dynamic content.
+The database server (MySQL) stores and manages the website's data.
+An SSL certificate is added to enable HTTPS, ensuring encrypted communication between the users and the website.
+Three monitoring clients are included to collect data and send it to a monitoring tool such as Sumo Logic or other monitoring services.
+Monitoring is used to track and analyze various aspects of the infrastructure, including performance, availability,
