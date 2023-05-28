@@ -1,0 +1,116 @@
+                    +-------------------+
+                    |                   |
+           +------->|    User's        |
+           |        |    Computer      |
+           |        |                   |
+           |        +-------------------+
+           |
+           |
+           |        +-------------------+
+           |        |                   |
+           +--------|   DNS Server      |
+           |        |                   |
+           |        +-------------------+
+           |
+           |
+           |        +-------------------+
+           |        |                   |
+           +------->|   Load Balancer   |
+           |        |   (HAProxy)       |
+           +------->|                   |
+           |        +-------------------+
+           |
+           |
+           |        +-------------------+
+           |        |                   |
+           +------->|   Web Server 1    |
+           |        |   (Nginx)         |
+           +------->|                   |
+           |        +-------------------+
+           |
+           |
+           |        +-------------------+
+           |        |                   |
+           +------->|  Application      |
+           |        |   Server 1        |
+           +------->|                   |
+           |        +-------------------+
+           |
+           |
+           |        +-------------------+
+           |        |                   |
+           +------->|   Web Server 2    |
+           |        |   (Nginx)         |
+           +------->|                   |
+           |        +-------------------+
+           |
+           |
+           |        +-------------------+
+           |        |                   |
+           +------->|  Application      |
+           |        |   Server 2        |
+           +------->|                   |
+           |        +-------------------+
+           |
+           |
+           |        +-------------------+
+           |        |                   |
+           +------->|     Database      |
+                    |     (MySQL)       |
+                    |                   |
+                    +-------------------+
+
+
+
+A three-server web infrastructure that hosts the website www.foobar.com.
+
+1. User wanting to access the website:
+When a user wants to access the website, they will enter the URL "www.foobar.com" in their web browser.
+
+2. Server 1 (Web Server):
+- Acts as the primary web server for handling HTTP requests.
+- Runs Nginx to serve static files and act as a reverse proxy to the application server.
+- Provides a scalable and high-performance solution for handling web traffic.
+
+3. Server 2 (Application Server):
+- Executes the website's code base and generates dynamic content.
+- Communicates with the web server and the database server to fulfill user requests.
+- Handles the application logic and processes the business logic of the website.
+
+4. Server 3 (Database Server):
+- Stores and manages the website's data.
+- Utilizes MySQL to provide a reliable and scalable database solution.
+
+5. Load Balancer (HAProxy):
+- Sits between the user and the web/application servers.
+- Distributes incoming requests across multiple servers to achieve load balancing.
+- Uses a distribution algorithm (e.g., round-robin, least connections) to determine how requests are allocated among the servers.
+- Enables increased availability, scalability, and improved performance by distributing the traffic load.
+
+6. Set of application files (code base):
+- Contains the website's code that defines its functionality and behavior.
+- Stored on the application server(s) and executed to generate dynamic content.
+
+7. Database Primary-Replica (Master-Slave) cluster:
+- Consists of the primary node and one or more replica nodes.
+- The primary node handles read and write operations, acting as the authoritative source for data.
+- The replica nodes replicate data from the primary node and handle read operations to offload the primary node and improve performance.
+- Provides redundancy, fault tolerance, and scalability for the database.
+
+8. Active-Active vs. Active-Passive setup:
+- Active-Active setup: In this setup, both application servers are actively serving requests simultaneously, distributing the load across them. It enables higher availability and better performance as both servers handle traffic.
+- Active-Passive setup: In this setup, one application server is actively serving requests (active), while the other server remains idle (passive). If the active server fails, the passive server takes over. It provides failover protection but under normal conditions, one server remains unused.
+
+Issues with this infrastructure:
+
+1. Single Point of Failure (SPOF):
+- The web server, application server, and database server are all still single points of failure. If any of these servers go down, it can cause website unavailability or disruption of services.
+
+2. Security issues:
+- The infrastructure lacks a firewall, leaving the servers vulnerable to unauthorized access or attacks.
+- The absence of HTTPS (SSL/TLS encryption) exposes sensitive user data to potential eavesdropping or tampering.
+
+3. No monitoring:
+- Without a monitoring system, it becomes difficult to identify and address performance issues, bottlenecks, or server failures in real-time.
+
+Please note that this diagram represents a simplified view of the infrastructure and may not include additional components like network switches, firewalls, or redundant network connections, which would be recommended for a production environment.
