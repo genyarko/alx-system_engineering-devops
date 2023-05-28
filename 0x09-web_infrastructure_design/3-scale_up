@@ -1,0 +1,67 @@
+                        +-------------------+
+                        |                   |
+               +------->|    User's        |
+               |        |    Computer      |
+               |        |                   |
+               |        +-------------------+
+               |
+               |
+               |        +-------------------+
+               |        |                   |
+               +--------|   DNS Server      |
+               |        |                   |
+               |        +-------------------+
+               |
+               |
+               |        +-------------------+
+               |        |                   |
+               +------->|   Load Balancer   |
+               |        |   (HAProxy)       |
+               +------->|   (Clustered)     |
+               |        +-------------------+
+               |
+               |
+               |        +-------------------+
+               |        |                   |
+               +------->|    Web Server     |
+               |        |   (Nginx)         |
+               |        |                   |
+               |        +-------------------+
+               |
+               |
+               |        +-------------------+
+               |        |                   |
+               +------->|  Application      |
+               |        |   Server          |
+               |        |                   |
+               |        +-------------------+
+               |
+               |
+               |        +-------------------+
+               |        |                   |
+               +------->|    Database       |
+                        |   (MySQL)         |
+                        |                   |
+                        +-------------------+
+
+In this diagram:
+
+The user's computer represents the device from which a user accesses the website.
+The DNS server translates the domain name to the server's IP address.
+The load balancer (HAProxy) is added to distribute incoming requests across multiple web servers for scalability and high availability.
+The web server (Nginx) handles incoming HTTP requests, serves static files, and acts as a reverse proxy for the application server.
+The application server executes the website's code base, generates dynamic content, and handles the application logic.
+The database server (MySQL) stores and manages the website's data.
+The load balancer is configured as a cluster with another load balancer for redundancy and improved fault tolerance.
+Explanation for additional elements:
+
+Separate servers for web server, application server, and database:
+
+This separation allows each component to have dedicated resources and optimize their performance independently.
+It enables scaling each component individually based on their specific requirements.
+It improves fault isolation and minimizes the impact of issues or failures on other components.
+Load balancer (HAProxy) in a clustered configuration:
+
+Load balancers distribute incoming requests across multiple web servers to ensure efficient utilization of resources and handle increased traffic.
+Clustering the load balancers provides redundancy and high availability. If one load balancer fails, the other can take over seamlessly.
+It improves the scalability, reliability, and fault tolerance of the infrastructure.
