@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Bash script to configure Nginx on a new Ubuntu machine
+
+# Update the system packages
+apt-get update
+
+# Install Nginx
+apt-get install -y nginx
+
+# Configure Nginx to listen on port 80
+echo "
+server {
+    listen 80;
+    location / {
+        echo 'Hello World!';
+    }
+}" > /etc/nginx/sites-available/default
+
+# Restart Nginx by sending a HUP signal to the master process
+nginx -s reload
+
+exit 0
