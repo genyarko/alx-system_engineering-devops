@@ -1,3 +1,18 @@
 #!/usr/bin/env bash
-# Creates an RSA key pair with the passphrase betty
-ssh-keygen -f school -b 4096 -N betty
+
+# Script to create an RSA key pair with passphrase
+
+key_name="school"
+key_bits=4096
+passphrase="betty"
+
+# Generate the RSA key pair
+openssl genpkey -algorithm RSA -out "$key_name" -aes256 -pass "pass:$passphrase" -pkeyopt rsa_keygen_bits:$key_bits
+
+# Set appropriate permissions for the private key file
+chmod 600 "$key_name"
+
+echo "RSA key pair created successfully!"
+echo "Private key: $key_name"
+echo "Public key: ${key_name}.pub"
+
