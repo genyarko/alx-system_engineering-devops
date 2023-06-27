@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Bash script to configure Nginx on a new Ubuntu machine for redirection
+
+# Update the system packages
+apt-get update
+
+# Install Nginx
+apt-get install -y nginx
+
+# Create a new configuration file for the redirection
+echo "
+server {
+    listen 80;
+    server_name localhost;
+
+    location /redirect_me {
+        return 301 https://example.com/new_page;
+    }
+
+    location / {
+        root /var/www/html;
+        index index.html;
+    }
+}" > /etc/nginx/sites-available/default
+
+# Restart Nginx by sending a HUP signal to the master process
+kill -HUP $(pgrep nginx)
+
+exit 0
