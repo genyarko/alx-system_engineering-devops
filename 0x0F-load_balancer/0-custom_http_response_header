@@ -1,12 +1,30 @@
 #!/usr/bin/env bash
-# This script configures Nginx to include a custom HTTP response header.
+# Configures Nginx with custom header and some additional settings
 
-# Install Nginx
-sudo apt-get update
-sudo apt-get install -y nginx
+# Retrieves the hostname of the server
+hostname=$(hostname)
 
-# Add custom header configuration to Nginx
-echo 'add_header X-Served-By $hostname;' | sudo tee /etc/nginx/conf.d/custom_header.conf
+# Updates package list and install Nginx
+apt-get update -y
+apt-get install nginx -y
 
-# Restart Nginx
-sudo service nginx restart
+# Create a simple index.html file
+echo "Hello, World!" > /var/www/html/index.html
+
+# Create a custom 404 page
+echo "Page not found" > /var/www/html/custom_404.html
+
+# Configure Nginx default site
+config_file="/etc/nginx/sites-available/default"
+temp_config_file=$(mktemp)
+
+# Modify the default configuration file
+sed -e "s|^\s*#*server\s*{.*|&\n\tadd_header X-Served-By $hostname;|" \
+    -e "s|^\s*#*location\s*/\s*{|&\n\t\terror_page 404 /custom_404.html;\n\t\tlocation /redirect_me {\n\t\t\treturn 301 \$scheme://www.google.com;|" \
+    "$config_file" > "$temp_config_file"
+
+# Replace the original configuration file with the modified version
+mv "$temp_config_file" "$config_file"
+
+# Restart Nginx service
+service nginx restart
