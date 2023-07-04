@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+# Configure HAProxy on lb-01 server
+
+# Update the package lists
+apt-get update -y
+
+# Install HAProxy
+apt-get install -y haproxy
+
+# Configure HAProxy
+config_file="/etc/haproxy/haproxy.cfg"
+
+# Backup the original HAProxy configuration file
+cp "$config_file" "$config_file.original"
+
+# Create a new HAProxy configuration file
+cat <<EOF > "$config_file"
+global
+    log 127.0.0.1 local0 notice
+    maxconn 2000
+    user haproxy
+    group haproxy
+
+defaults
+    log global
+    mode http
+    option httplog
+    option dontlognull
+    retries 3
+    option redispatch
+    timeout connect 5000
+    timeout client 10000
+    timeout server 10000
+
+frontend http-in
+    bind *:80
+    default_backend webservers
+
+backend webservers
+    balance roundrobin
+    server web-01 [STUDENT_ID]-web-01:80 check
+    server web-02 [STUDENT_ID]-web-02:80 check
+EOF
+
+# Configure HAProxy init script
+sed -i 's/ENABLED=0/ENABLED=1/' /etc/default/haproxy
+
+# Restart HAProxy service
+service haproxy restart
