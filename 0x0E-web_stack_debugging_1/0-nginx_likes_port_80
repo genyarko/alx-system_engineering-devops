@@ -19,7 +19,8 @@ ufw status
 apt-get install -y nginx
 
 # Modify Nginx configuration if necessary
-# ...
+rm /etc/nginx/sites-enabled/default
+ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 
 # Restart Nginx
 service nginx restart
