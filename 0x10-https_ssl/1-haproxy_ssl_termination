@@ -16,5 +16,5 @@ backend app_backend
     option forwardfor
     http-request set-header X-Forwarded-Port %[dst_port]
     http-request add-header X-Forwarded-Proto https if { ssl_fc }
-    server web-01 100.24.206.17:80 check
-    server web-02 54.173.234.218:80 check
+    server 193460-web-01 100.24.206.17:80 check
+    server 193460-web-02 54.173.234.218:80 check
