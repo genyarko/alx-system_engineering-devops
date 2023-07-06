@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
-# Add the 'listen 80;
+apt update
+apt install -y nginx
 echo 'listen 80;' >> /etc/nginx/nginx.conf
 service nginx restart
