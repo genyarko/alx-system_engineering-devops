@@ -1,25 +1,17 @@
 #!/usr/bin/env bash
-# Check Nginx status
-service nginx status
+# Check if Nginx is installed
+if ! command -v nginx &> /dev/null; then
+    # Install Nginx
+    apt update
+    apt install nginx
+fi
 
-# Check Nginx configuration
-cat /etc/nginx/nginx.conf
-
-# Check network configuration
-ip addr show
-
-# Check listening ports
-netstat -tuln | grep 80
-
-# Check firewall settings
-ufw status
-
-# Install Nginx if necessary
-apt-get install -y nginx
-
-# Modify Nginx configuration if necessary
-# ...
+# Check the Nginx configuration
+nginx_config="/etc/nginx/nginx.conf"
+if ! grep -q "listen 80;" "$nginx_config"; then
+    # Add the 'listen 80;' line if it's not present
+    echo "listen 80;" >> "$nginx_config"
+fi
 
 # Restart Nginx
-service nginx restart
-
+systemctl restart nginx
