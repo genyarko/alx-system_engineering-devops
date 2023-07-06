@@ -49,5 +49,5 @@ backend web_servers
     balance roundrobin
     option http-server-close
     option forwardfor
-    server web-01 100.24.206.17:80 check
-    server web-02 54.173.234.218:80 check
+    server 193460-web-01 100.24.206.17:80 check
+    server 193460-web-02 54.173.234.218:80 check
