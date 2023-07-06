@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-apt update
-apt install -y nginx
-echo 'listen 80;' >> /etc/nginx/nginx.conf
-service nginx restart
+# Define the configuration file
+config_file="/etc/nginx/sites-enabled/default"
+sed -i 's/8080/80/g' "$config_file"
+systemctl restart nginx
