@@ -1,0 +1,4 @@
+ssh username@web-01
+sudo ufw enable
+sudo ufw route allow 8080/tcp to 0.0.0.0/0 port 80
+sudo ufw status
