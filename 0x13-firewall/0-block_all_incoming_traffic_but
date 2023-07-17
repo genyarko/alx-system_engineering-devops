@@ -1,3 +1,4 @@
+ssh 193460-web-01@web-01
 sudo apt update
 sudo apt install ufw
 sudo ufw enable
