@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+#install nginx
+apt-get update
+apt-get install -y nginx
+sed -i 's/^user .*/user nginx;/g' /etc/nginx/nginx.conf
+systemctl restart nginx
+nc -z 0 8080
