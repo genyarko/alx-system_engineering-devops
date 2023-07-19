@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Function to display script usage
 function display_usage {
     echo "Usage: $0 [-u mysql_username] [-p mysql_password] [-o output_directory]"
@@ -57,11 +57,19 @@ dump_file="$output_dir/backup.sql"
 archive_file="$output_dir/$(date +%d-%m-%Y).tar.gz"
 
 # Perform MySQL dump with all databases
-mysqldump -u"$mysql_user" -p"$mysql_password" --all-databases -B > "$dump_file"
+mysqldump -u"$mysql_user" -p"$mysql_password" --all-databases > "$dump_file"
 
 # Check if mysqldump was successful
 if [ $? -ne 0 ]; then
     echo "Error: MySQL dump failed."
+    exit 1
+fi
+
+# Verify the generated backup file
+if [ -s "$dump_file" ]; then
+    echo "MySQL dump created successfully."
+else
+    echo "Error: Generated MySQL dump file is empty or not valid."
     exit 1
 fi
 
@@ -74,7 +82,13 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Clean up the MySQL dump file
-rm --force "$dump_file"
+# Check if the archive file was created
+if [ -f "$archive_file" ]; then
+    echo "Backup completed successfully. Archive: $archive_file"
+else
+    echo "Error: Archive file was not created."
+    exit 1
+fi
 
-echo "Backup completed successfully. Archive: $archive_file"
+# Clean up the MySQL dump file
+rm "$dump_file"
