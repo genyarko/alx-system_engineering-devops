@@ -1,4 +1,80 @@
-#!/usr/bin/env bash
-# A compressed archive of a MySQL dump.
-mysqldump -uroot -p"$1" --all-databases > backup.sql
-tar -cvzf "$(date +%d-%m-%Y)".tar.gz backup.sql
+#!/bin/bash
+# Function to display script usage
+function display_usage {
+    echo "Usage: $0 [-u mysql_username] [-p mysql_password] [-o output_directory]"
+    echo "Options:"
+    echo "  -u: MySQL username (default: root)"
+    echo "  -p: MySQL password (required)"
+    echo "  -o: Output directory for the backup (default: current directory)"
+}
+
+# Default values
+mysql_user="root"
+output_dir="."
+
+# Parse script arguments
+while getopts ":u:p:o:" opt; do
+    case $opt in
+        u)
+            mysql_user="$OPTARG"
+            ;;
+        p)
+            mysql_password="$OPTARG"
+            ;;
+        o)
+            output_dir="$OPTARG"
+            ;;
+        \?)
+            echo "Invalid option: -$OPTARG" >&2
+            display_usage
+            exit 1
+            ;;
+        :)
+            echo "Option -$OPTARG requires an argument." >&2
+            display_usage
+            exit 1
+            ;;
+    esac
+done
+
+# Check if the MySQL password is provided
+if [ -z "$mysql_password" ]; then
+    echo "Error: MySQL password is required."
+    display_usage
+    exit 1
+fi
+
+# Create the output directory if it doesn't exist
+mkdir -p "$output_dir" || {
+    echo "Error: Unable to create the output directory: $output_dir"
+    exit 1
+}
+
+# MySQL dump filename
+dump_file="$output_dir/backup.sql"
+
+# Compressed archive filename with date
+archive_file="$output_dir/$(date +%d-%m-%Y).tar.gz"
+
+# Perform MySQL dump with all databases
+mysqldump -u"$mysql_user" -p"$mysql_password" --all-databases -B > "$dump_file"
+
+# Check if mysqldump was successful
+if [ $? -ne 0 ]; then
+    echo "Error: MySQL dump failed."
+    exit 1
+fi
+
+# Compress the MySQL dump into a tar.gz archive
+tar -czf "$archive_file" -C "$output_dir" backup.sql
+
+# Check if tar compression was successful
+if [ $? -ne 0 ]; then
+    echo "Error: Compression of MySQL dump failed."
+    exit 1
+fi
+
+# Clean up the MySQL dump file
+rm --force "$dump_file"
+
+echo "Backup completed successfully. Archive: $archive_file"
