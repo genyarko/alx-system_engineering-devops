@@ -65,14 +65,6 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Verify the generated backup file
-if [ -s "$dump_file" ]; then
-    echo "MySQL dump created successfully."
-else
-    echo "Error: Generated MySQL dump file is empty or not valid."
-    exit 1
-fi
-
 # Compress the MySQL dump into a tar.gz archive
 tar -czf "$archive_file" -C "$output_dir" backup.sql
 
@@ -82,13 +74,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Check if the archive file was created
-if [ -f "$archive_file" ]; then
-    echo "Backup completed successfully. Archive: $archive_file"
-else
-    echo "Error: Archive file was not created."
-    exit 1
-fi
-
 # Clean up the MySQL dump file
 rm "$dump_file"
+
+echo "Backup completed successfully. Archive: $archive_file"
