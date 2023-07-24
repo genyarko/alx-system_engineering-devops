@@ -9,48 +9,45 @@ Usage:
     python3 gather_data_from_an_API.py
 """
 
-import requests
-import json
+def get_employee_todos(user_id):
+    url = "https://jsonplaceholder.typicode.com/"
+    todos_response = requests.get(url + "todos", params={"userId": user_id})
 
-def get_all_employees_todo_list_progress():
-    """
-    Fetch the TODO list progress for all employees and export to JSON format.
+    if todos_response.status_code != 200:
+        print(f"Error: Unable to fetch data for Employee ID: {user_id}")
+        return []
 
-    Returns:
-        None
-    """
-    base_url = 'https://jsonplaceholder.typicode.com'
-    users_url = f'{base_url}/users'
-    todos_url = f'{base_url}/todos'
-
-    response_users = requests.get(users_url)
-    response_todos = requests.get(todos_url)
-
-    users_data = response_users.json()
-    todos_data = response_todos.json()
-
-    all_employees_data = {}
-
-    for user in users_data:
-        employee_id = user['id']
-        employee_name = user['name']
-
-        tasks = [
-            {
-                "username": employee_name,
-                "task": task['title'],
-                "completed": task['completed']
-            }
-            for task in todos_data if task['userId'] == employee_id
-        ]
-
-        all_employees_data[employee_id] = tasks
-
-    json_file = "todo_all_employees.json"
-    with open(json_file, 'w') as file:
-        json.dump(all_employees_data, file, indent=4)
-
-    print(f"Data for all employees exported to {json_file}")
+    return todos_response.json()
 
 if __name__ == "__main__":
-    get_all_employees_todo_list_progress()
+    url = "https://jsonplaceholder.typicode.com/"
+    users_response = requests.get(url + "users")
+
+    if users_response.status_code != 200:
+        print("Error: Unable to fetch users' data from the API.")
+        exit(1)
+
+    users = users_response.json()
+
+    all_employees_data = {}
+    for user in users:
+        employee_id = user.get("id")
+        username = user.get("username")
+        todos = get_employee_todos(employee_id)
+
+        all_employees_data[employee_id] = {
+            "username": username,
+            "todos": [
+                {
+                    "task_id": todo.get("id"),
+                    "title": todo.get("title"),
+                    "completed": todo.get("completed")
+                }
+                for todo in todos
+            ]
+        }
+
+    with open("todo_all_employees.json", "w") as jsonfile:
+        json.dump(all_employees_data, jsonfile, indent=4)
+
+    print("Data for all employees exported to todo_all_employees.json successfully.")
