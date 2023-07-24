@@ -7,54 +7,42 @@ Script to fetch TODO list progress for a given employee ID using REST API and ex
 Usage:
     python3 gather_data_from_an_API.py <employee_id>
 """
+def get_employee_todos(user_id):
+    url = "https://jsonplaceholder.typicode.com/"
+    user_response = requests.get(url + "users/{}".format(user_id))
+    todos_response = requests.get(url + "todos", params={"userId": user_id})
 
-import sys
-import requests
-import json
+    if user_response.status_code != 200 or todos_response.status_code != 200:
+        print("Error: Unable to fetch data from the API.")
+        sys.exit(1)
 
-def get_employee_todo_list_progress(employee_id):
-    """
-    Fetch and display the TODO list progress for the given employee ID and export to JSON format.
-
-    Args:
-        employee_id (int): The ID of the employee.
-
-    Returns:
-        None
-    """
-    base_url = 'https://jsonplaceholder.typicode.com'
-    user_url = f'{base_url}/users/{employee_id}'
-    todos_url = f'{base_url}/todos?userId={employee_id}'
-
-    response_user = requests.get(user_url)
-    response_todos = requests.get(todos_url)
-
-    user_data = response_user.json()
-    todos_data = response_todos.json()
-
-    employee_name = user_data['name']
-
-    json_data = {
-        "USER_ID": [
-            {
-                "task": task['title'],
-                "completed": task['completed'],
-                "username": employee_name
-            }
-            for task in todos_data
-        ]
-    }
-
-    json_file = f'{employee_id}.json'
-    with open(json_file, 'w') as file:
-        json.dump(json_data, file, indent=4)
-
-    print(f"Employee {employee_name} data exported to {json_file}")
+    user = user_response.json()
+    todos = todos_response.json()
+    return user, todos
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
+    if len(sys.argv) != 2 or not sys.argv[1].isdigit():
         print("Usage: python3 gather_data_from_an_API.py <employee_id>")
         sys.exit(1)
 
     employee_id = int(sys.argv[1])
-    get_employee_todo_list_progress(employee_id)
+    user, todos = get_employee_todos(employee_id)
+    username = user.get("username")
+
+    employee_data = {
+        "employee_id": employee_id,
+        "username": username,
+        "todos": [
+            {
+                "task_id": todo.get("id"),
+                "title": todo.get("title"),
+                "completed": todo.get("completed")
+            }
+            for todo in todos
+        ]
+    }
+
+    with open(f"{employee_id}.json", "w") as jsonfile:
+        json.dump(employee_data, jsonfile, indent=4)
+
+    print(f"Data for Employee {username} exported to {employee_id}.json successfully.")
