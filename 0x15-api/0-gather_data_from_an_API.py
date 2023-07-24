@@ -1,5 +1,10 @@
 #!/usr/bin/python3
-"""Returns to-do list information for a given employee ID."""
+"""
+Module: gather_data_from_an_API
+Script to fetch TODO list progress for a given employee ID using REST API.
+Usage:
+    python3 gather_data_from_an_API.py <employee_id>
+"""
 import requests
 import sys
 
