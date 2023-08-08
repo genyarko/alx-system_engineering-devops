@@ -3,8 +3,6 @@
 import praw
 import requests
 
-import praw
-
 def count_words(subreddit, word_list, reddit=None, counts=None, after=None):
     if reddit is None:
         reddit = praw.Reddit(user_agent='myBot/0.0.1')
