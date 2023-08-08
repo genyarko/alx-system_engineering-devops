@@ -1,30 +1,31 @@
 #!/usr/bin/python3
 """Function to query a list of all hot posts on a given Reddit subreddit."""
+import praw
 import requests
 
 
-def recurse(subreddit, hot_list=[], after="", count=0):
-    """Returns a list of titles of all hot posts on a given subreddit."""
-    url = "https://www.reddit.com/r/{}/hot/.json".format(subreddit)
-    headers = {
-        "User-Agent": "linux:0x16.api.advanced:v1.0.0 (by /u/bdov_)"
-    }
-    params = {
-        "after": after,
-        "count": count,
-        "limit": 100
-    }
-    response = requests.get(url, headers=headers, params=params,
-                            allow_redirects=False)
-    if response.status_code == 404:
-        return None
-
-    results = response.json().get("data")
-    after = results.get("after")
-    count += results.get("dist")
-    for c in results.get("children"):
-        hot_list.append(c.get("data").get("title"))
-
-    if after is not None:
-        return recurse(subreddit, hot_list, after, count)
-    return hot_list
+def count_words(subreddit, word_list, reddit=None, counts=None):
+    if reddit is None:
+        reddit = praw.Reddit(user_agent='myBot/0.0.1')
+    if counts is None:
+        counts = {}
+    try:
+        hot_posts = reddit.subreddit(subreddit).hot(limit=None)
+    except praw.exceptions.NotFound:
+        return
+    for post in hot_posts:
+        words = post.title.lower().split()
+        for word in word_list:
+            if word.lower() in words:
+                if word.lower() in counts:
+                    counts[word.lower()] += words.count(word.lower())
+                else:
+                    counts[word.lower()] = words.count(word.lower())
+    if not counts:
+        return
+    sorted_counts = sorted(counts.items(), key=lambda x: (-x[1], x[0]))
+    for word, count in sorted_counts:
+        print(f"{word}: {count}")
+    after = list(hot_posts)[-1].name
+    count_words(subreddit, word_list, reddit, counts, after=after)
+    
